@@ -11,8 +11,9 @@ PSQL="psql --username=freecodecamp --dbname=number_guess -t --no-align -c"
 echo -e "\n~~~~~ Number Guessing Game ~~~~~\n"
 
 
-echo "Enter your username:"
-read USERNAME
+DISPLAY () {
+  echo -e "\nEnter your username:"
+  read USERNAME
 
 PLAYER_ID=$($PSQL "SELECT player_id FROM players WHERE name = '$USERNAME'")
 
@@ -42,6 +43,9 @@ then
   BEST_GAME=0
 fi
 
+NUMBER_GUESS
+}
+
 
 NUMBER_GUESS () {
   echo -e "\nGuess the secret number between 1 and 1000:"
@@ -64,8 +68,9 @@ NUMBER_GUESS () {
       NUMBER_GUESS 
     fi
   else
-    echo -e "\nYou guessed it in $NUMBER_OF_TRIES tries. The secret number was $NUMBER. Nice job!"
+    echo -e "\nYou guessed it in $NUMBER_OF_TRIES tries. The secret number was $NUMBER. Nice job!\n"
     #update player record when done with game
+
     if [[ $BEST_GAME == 0 || $BEST_GAME -gt $NUMBER_OF_TRIES ]]
     then
       BEST_GAME=$NUMBER_OF_TRIES
@@ -73,7 +78,13 @@ NUMBER_GUESS () {
 
     INSERT_GAME_DATA=$($PSQL "INSERT INTO games(best_game ,player_id) VALUES($BEST_GAME,$PLAYER_ID)")
   fi
+
+  
+
+  DISPLAY
 }
 
-NUMBER_GUESS 
+DISPLAY
+
+ 
 
